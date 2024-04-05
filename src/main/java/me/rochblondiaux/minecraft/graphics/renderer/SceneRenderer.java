@@ -1,16 +1,19 @@
 package me.rochblondiaux.minecraft.graphics.renderer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import lombok.Data;
+import me.rochblondiaux.minecraft.game.model.Cleanable;
+import me.rochblondiaux.minecraft.graphics.Entity;
+import me.rochblondiaux.minecraft.graphics.Mesh;
+import me.rochblondiaux.minecraft.graphics.Model;
 import me.rochblondiaux.minecraft.graphics.UniformMap;
 import me.rochblondiaux.minecraft.scene.Scene;
-import me.rochblondiaux.minecraft.game.model.Cleanable;
 import me.rochblondiaux.minecraft.shader.ShaderModuleData;
 import me.rochblondiaux.minecraft.shader.ShaderProgram;
 
@@ -28,21 +31,34 @@ public class SceneRenderer implements Cleanable {
 
         this.uniformMap = new UniformMap(shaderProgram.getId());
         this.uniformMap.create("projectionMatrix");
+        this.uniformMap.create("modelMatrix");
     }
 
     public void render(Scene scene) {
+        // Bind the shader program
         this.shaderProgram.bind();
 
+        // Set the uniforms
         this.uniformMap.set("projectionMatrix", scene.getProjection().getProjectionMatrix());
 
-        scene.getMeshes()
-                .values()
-                .forEach(mesh -> {
-                    GL30.glBindVertexArray(mesh.getVaoId());
-                    GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.getVerticesCount(), GL11.GL_UNSIGNED_INT, 0);
-                });
+        // Render the scene
+        Collection<Model> models = scene.getModels().values();
+        for (Model model : models) {
+            for (Mesh mesh : model.getMeshes()) {
+                GL30.glBindVertexArray(mesh.getVaoId());
+                List<Entity> entities = model.getEntities();
+                for (Entity entity : entities) {
+                    this.uniformMap.set("modelMatrix", entity.getModelMatrix());
+                    GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.getVerticesCount(), GL30.GL_UNSIGNED_INT, 0);
+                }
+            }
+        }
+
+
+        // Clear the depth buffer
         GL30.glBindVertexArray(0);
 
+        // Unbind the shader program
         this.shaderProgram.unbind();
     }
 

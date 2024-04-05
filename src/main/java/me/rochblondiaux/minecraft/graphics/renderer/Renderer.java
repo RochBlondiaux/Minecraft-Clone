@@ -13,6 +13,7 @@ public class Renderer implements Cleanable {
 
     public Renderer() {
         GL.createCapabilities();
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
 
         this.sceneRenderer = new SceneRenderer();
     }
