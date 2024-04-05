@@ -53,8 +53,6 @@ public class Window implements Cleanable, Updatable {
         if (options.width == 0 || options.height == 0)
             throw new IllegalArgumentException("Width and height must be greater than 0");
 
-        GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
-
         // Create window
         long windowHandle = GLFW.glfwCreateWindow(options.width, options.height, options.title, MemoryUtil.NULL, MemoryUtil.NULL);
         if (windowHandle == 0)
