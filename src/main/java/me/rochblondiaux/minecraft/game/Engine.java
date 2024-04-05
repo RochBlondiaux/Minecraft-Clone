@@ -52,8 +52,10 @@ public class Engine implements Cleanable {
             deltaRender += (currentTime - initialTime) / renderInterval;
 
             // Handle inputs
-            if (targetFps <= 0 || deltaRender >= 1)
+            if (targetFps <= 0 || deltaRender >= 1) {
+                this.window.getMouseInput().input();
                 this.gameLogic.input(this.window, this.scene, currentTime - initialTime);
+            }
 
             // Update
             if (deltaUpdate >= 1) {

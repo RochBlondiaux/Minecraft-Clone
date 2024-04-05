@@ -17,10 +17,12 @@ public class Scene implements Cleanable {
     private final Map<String, Model> models = new HashMap<>();
     private final Projection projection;
     private final TextureAtlas textureAtlas;
+    private final Camera camera;
 
     public Scene(int width, int height) {
         this.projection = new Projection(width, height);
         this.textureAtlas = new TextureAtlas();
+        this.camera = new Camera();
     }
 
     public void addEntity(Entity entity) {

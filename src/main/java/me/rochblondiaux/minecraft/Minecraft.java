@@ -3,8 +3,7 @@ package me.rochblondiaux.minecraft;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 import lombok.Data;
@@ -17,10 +16,15 @@ import me.rochblondiaux.minecraft.graphics.Mesh;
 import me.rochblondiaux.minecraft.graphics.Model;
 import me.rochblondiaux.minecraft.graphics.renderer.Renderer;
 import me.rochblondiaux.minecraft.graphics.texture.Texture;
+import me.rochblondiaux.minecraft.input.MouseInput;
+import me.rochblondiaux.minecraft.scene.Camera;
 import me.rochblondiaux.minecraft.scene.Scene;
 
 @Data
 public class Minecraft implements GameLogic {
+
+    private static final float MOUSE_SENSITIVITY = 0.1f;
+    private static final float MOVEMENT_SPEED = 0.005f;
 
     private Engine engine;
 
@@ -39,8 +43,6 @@ public class Minecraft implements GameLogic {
     }
 
     private Entity cubeEntity;
-    private Vector4f displInc = new Vector4f();
-    private float rotation;
 
     @Override
     public void init(Window window, Scene scene, Renderer renderer) {
@@ -156,44 +158,34 @@ public class Minecraft implements GameLogic {
 
     @Override
     public void input(Window window, Scene scene, long deltaTime) {
-        displInc.zero();
-        if (window.isKeyPressed(GLFW.GLFW_KEY_UP)) {
-            displInc.y = 1;
-        } else if (window.isKeyPressed(GLFW.GLFW_KEY_DOWN)) {
-            displInc.y = -1;
-        }
-        if (window.isKeyPressed(GLFW.GLFW_KEY_LEFT)) {
-            displInc.x = -1;
-        } else if (window.isKeyPressed(GLFW.GLFW_KEY_RIGHT)) {
-            displInc.x = 1;
-        }
-        if (window.isKeyPressed(GLFW.GLFW_KEY_A)) {
-            displInc.z = -1;
-        } else if (window.isKeyPressed(GLFW.GLFW_KEY_Q)) {
-            displInc.z = 1;
-        }
-        if (window.isKeyPressed(GLFW.GLFW_KEY_Z)) {
-            displInc.w = -1;
-        } else if (window.isKeyPressed(GLFW.GLFW_KEY_X)) {
-            displInc.w = 1;
+        final float move = deltaTime * MOVEMENT_SPEED;
+        final Camera camera = scene.getCamera();
+
+        if (window.isKeyPressed(GLFW.GLFW_KEY_W))
+            camera.moveForward(move);
+        else if (window.isKeyPressed(GLFW.GLFW_KEY_S))
+            camera.moveBackward(move);
+        if (window.isKeyPressed(GLFW.GLFW_KEY_A))
+            camera.moveLeft(move);
+        else if (window.isKeyPressed(GLFW.GLFW_KEY_D))
+            camera.moveRight(move);
+        if (window.isKeyPressed(GLFW.GLFW_KEY_UP))
+            camera.moveUp(move);
+        else if (window.isKeyPressed(GLFW.GLFW_KEY_DOWN))
+            camera.moveDown(move);
+
+        MouseInput mouseInput = window.getMouseInput();
+        if (mouseInput.isRightButtonPressed()) {
+            Vector2f displVec = mouseInput.getDisplayVector();
+            camera.addRotation((float) Math.toRadians(-displVec.x * MOUSE_SENSITIVITY),
+                    (float) Math.toRadians(-displVec.y * MOUSE_SENSITIVITY));
         }
 
-        displInc.mul(deltaTime / 1000.0f);
-
-        Vector3f entityPos = cubeEntity.getPosition();
-        cubeEntity.setPosition(displInc.x + entityPos.x, displInc.y + entityPos.y, displInc.z + entityPos.z);
-        cubeEntity.setScale(cubeEntity.getScale() + displInc.w);
-        cubeEntity.updateModelMatrix();
     }
 
     @Override
     public void update(Window window, Scene scene, long deltaTime) {
-        rotation += 1.5f;
-        if (rotation > 360) {
-            rotation = 0;
-        }
-        cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-        cubeEntity.updateModelMatrix();
+
     }
 
     @Override

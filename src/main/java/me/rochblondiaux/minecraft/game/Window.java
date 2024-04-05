@@ -9,13 +9,15 @@ import lombok.Builder;
 import lombok.Data;
 import me.rochblondiaux.minecraft.game.model.Cleanable;
 import me.rochblondiaux.minecraft.game.model.Updatable;
+import me.rochblondiaux.minecraft.input.MouseInput;
 
 @Data
 public class Window implements Cleanable, Updatable {
 
     private final long windowHandle;
+    private final MouseInput mouseInput;
+    private final Runnable resizeCallback;
     private int height;
-    private Runnable resizeCallback;
     private int width;
 
     public Window(WindowOptions options, Runnable resizeCallback) {
@@ -23,6 +25,7 @@ public class Window implements Cleanable, Updatable {
         this.resizeCallback = resizeCallback;
         this.width = options.width;
         this.windowHandle = createWindow(options);
+        this.mouseInput = new MouseInput(this);
 
         this.show();
     }

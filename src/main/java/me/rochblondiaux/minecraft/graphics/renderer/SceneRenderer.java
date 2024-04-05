@@ -39,6 +39,7 @@ public class SceneRenderer implements Cleanable {
 
         // Set the uniforms
         this.uniformMap.set("projectionMatrix", scene.getProjection().getProjectionMatrix());
+        this.uniformMap.set("viewMatrix", scene.getCamera().getViewMatrix());
         this.uniformMap.set("txtSampler", 0);
 
         // Render the scene
@@ -74,6 +75,7 @@ public class SceneRenderer implements Cleanable {
 
     public void createUniforms() {
         this.uniformMap.create("projectionMatrix");
+        this.uniformMap.create("viewMatrix");
         this.uniformMap.create("modelMatrix");
         this.uniformMap.create("txtSampler");
     }
