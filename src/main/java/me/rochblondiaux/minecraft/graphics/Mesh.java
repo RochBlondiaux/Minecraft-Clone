@@ -20,7 +20,7 @@ public class Mesh implements Cleanable {
     private final int vaoId;
     private final List<Integer> vboIds = new ArrayList<>();
 
-    public Mesh(float[] positions, float[] colors, int[] indices) {
+    public Mesh(float[] positions, float[] textCoords, int[] indices) {
         this.verticesCount = indices.length;
         try (MemoryStack stack = MemoryStack.stackPush()) {
             this.vaoId = GL30.glGenVertexArrays();
@@ -36,15 +36,15 @@ public class Mesh implements Cleanable {
             GL20.glEnableVertexAttribArray(0);
             GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
 
-            // Color VBO
+            // Texture coordinates VBO
             vboId = GL30.glGenBuffers();
             this.vboIds.add(vboId);
-            FloatBuffer colorsBuffer = stack.mallocFloat(colors.length);
-            colorsBuffer.put(0, colors);
+            FloatBuffer textCoordsBuffer  = stack.mallocFloat(textCoords.length);
+            textCoordsBuffer .put(0, textCoords);
             GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vboId);
-            GL30.glBufferData(GL30.GL_ARRAY_BUFFER, colorsBuffer, GL30.GL_STATIC_DRAW);
+            GL30.glBufferData(GL30.GL_ARRAY_BUFFER, textCoordsBuffer , GL30.GL_STATIC_DRAW);
             GL20.glEnableVertexAttribArray(1);
-            GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
+            GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
 
             // Index VBO
             vboId = GL30.glGenBuffers();

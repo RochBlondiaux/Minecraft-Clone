@@ -12,9 +12,11 @@ import me.rochblondiaux.minecraft.game.Engine;
 import me.rochblondiaux.minecraft.game.Window;
 import me.rochblondiaux.minecraft.game.model.GameLogic;
 import me.rochblondiaux.minecraft.graphics.Entity;
+import me.rochblondiaux.minecraft.graphics.Material;
 import me.rochblondiaux.minecraft.graphics.Mesh;
 import me.rochblondiaux.minecraft.graphics.Model;
 import me.rochblondiaux.minecraft.graphics.renderer.Renderer;
+import me.rochblondiaux.minecraft.graphics.texture.Texture;
 import me.rochblondiaux.minecraft.scene.Scene;
 
 @Data
@@ -43,7 +45,7 @@ public class Minecraft implements GameLogic {
     @Override
     public void init(Window window, Scene scene, Renderer renderer) {
         float[] positions = new float[]{
-                // VO
+                // V0
                 -0.5f, 0.5f, 0.5f,
                 // V1
                 -0.5f, -0.5f, 0.5f,
@@ -59,39 +61,95 @@ public class Minecraft implements GameLogic {
                 -0.5f, -0.5f, -0.5f,
                 // V7
                 0.5f, -0.5f, -0.5f,
+
+                // For text coords in top face
+                // V8: V4 repeated
+                -0.5f, 0.5f, -0.5f,
+                // V9: V5 repeated
+                0.5f, 0.5f, -0.5f,
+                // V10: V0 repeated
+                -0.5f, 0.5f, 0.5f,
+                // V11: V3 repeated
+                0.5f, 0.5f, 0.5f,
+
+                // For text coords in right face
+                // V12: V3 repeated
+                0.5f, 0.5f, 0.5f,
+                // V13: V2 repeated
+                0.5f, -0.5f, 0.5f,
+
+                // For text coords in left face
+                // V14: V0 repeated
+                -0.5f, 0.5f, 0.5f,
+                // V15: V1 repeated
+                -0.5f, -0.5f, 0.5f,
+
+                // For text coords in bottom face
+                // V16: V6 repeated
+                -0.5f, -0.5f, -0.5f,
+                // V17: V7 repeated
+                0.5f, -0.5f, -0.5f,
+                // V18: V1 repeated
+                -0.5f, -0.5f, 0.5f,
+                // V19: V2 repeated
+                0.5f, -0.5f, 0.5f,
         };
-        float[] colors = new float[]{
-                0.5f, 0.0f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f,
-                0.5f, 0.0f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f,
+        float[] textCoords = new float[]{
+                0.0f, 0.0f,
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+                0.5f, 0.0f,
+
+                0.0f, 0.0f,
+                0.5f, 0.0f,
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+
+                // For text coords in top face
+                0.0f, 0.5f,
+                0.5f, 0.5f,
+                0.0f, 1.0f,
+                0.5f, 1.0f,
+
+                // For text coords in right face
+                0.0f, 0.0f,
+                0.0f, 0.5f,
+
+                // For text coords in left face
+                0.5f, 0.0f,
+                0.5f, 0.5f,
+
+                // For text coords in bottom face
+                0.5f, 0.0f,
+                1.0f, 0.0f,
+                0.5f, 0.5f,
+                1.0f, 0.5f,
         };
         int[] indices = new int[]{
                 // Front face
                 0, 1, 3, 3, 1, 2,
                 // Top Face
-                4, 0, 3, 5, 4, 3,
+                8, 10, 11, 9, 8, 11,
                 // Right face
-                3, 2, 7, 5, 3, 7,
+                12, 13, 7, 5, 12, 7,
                 // Left face
-                6, 1, 0, 6, 0, 4,
+                14, 15, 6, 4, 14, 6,
                 // Bottom face
-                2, 1, 6, 2, 6, 7,
+                16, 18, 19, 17, 16, 19,
                 // Back face
-                7, 6, 4, 7, 4, 5,
-        };
-        List<Mesh> meshList = new ArrayList<>();
-        Mesh mesh = new Mesh(positions, colors, indices);
-        meshList.add(mesh);
-        String cubeModelId = "cube-model";
-        Model model = new Model(cubeModelId, meshList);
-        scene.addModel(model);
+                4, 6, 7, 5, 4, 7,};
+        Texture texture = scene.getTextureAtlas().createTexture("C:\\Users\\Roch Blondiaux\\Documents\\Development\\Games\\Minecraft-Clone\\src\\main\\resources\\textures\\block\\grass.png");
+        Material material = new Material();
+        material.setTexturePath(texture.getPath());
+        List<Material> materialList = new ArrayList<>();
+        materialList.add(material);
 
-        cubeEntity = new Entity("cube-entity", cubeModelId);
+        Mesh mesh = new Mesh(positions, textCoords, indices);
+        material.getMeshes().add(mesh);
+        Model cubeModel = new Model("cube-model", materialList);
+        scene.addModel(cubeModel);
+
+        cubeEntity = new Entity("cube-entity", cubeModel.getId());
         cubeEntity.setPosition(0, 0, -2);
         scene.addEntity(cubeEntity);
     }

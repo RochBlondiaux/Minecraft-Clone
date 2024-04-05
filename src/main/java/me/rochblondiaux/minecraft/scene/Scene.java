@@ -8,6 +8,7 @@ import me.rochblondiaux.minecraft.game.model.Cleanable;
 import me.rochblondiaux.minecraft.graphics.Entity;
 import me.rochblondiaux.minecraft.graphics.Mesh;
 import me.rochblondiaux.minecraft.graphics.Model;
+import me.rochblondiaux.minecraft.graphics.texture.TextureAtlas;
 
 @Data
 public class Scene implements Cleanable {
@@ -15,9 +16,11 @@ public class Scene implements Cleanable {
     private final Map<String, Mesh> meshes = new HashMap<>();
     private final Map<String, Model> models = new HashMap<>();
     private final Projection projection;
+    private final TextureAtlas textureAtlas;
 
     public Scene(int width, int height) {
         this.projection = new Projection(width, height);
+        this.textureAtlas = new TextureAtlas();
     }
 
     public void addEntity(Entity entity) {

@@ -12,15 +12,15 @@ public class Model implements Cleanable {
 
     private final String id;
     private final List<Entity> entities = new ArrayList<>();
-    private final List<Mesh> meshes;
+    private final List<Material> materials = new ArrayList<>();
 
-    public Model(String id, List<Mesh> meshes) {
+    public Model(String id, List<Material> materials) {
         this.id = id;
-        this.meshes = meshes;
+        this.materials.addAll(materials);
     }
 
     @Override
     public void cleanup() {
-        this.meshes.forEach(Mesh::cleanup);
+        this.materials.forEach(Material::cleanup);
     }
 }

@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.lwjgl.opengl.GL13C;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import lombok.Data;
 import me.rochblondiaux.minecraft.game.model.Cleanable;
-import me.rochblondiaux.minecraft.graphics.Entity;
-import me.rochblondiaux.minecraft.graphics.Mesh;
-import me.rochblondiaux.minecraft.graphics.Model;
-import me.rochblondiaux.minecraft.graphics.UniformMap;
+import me.rochblondiaux.minecraft.graphics.*;
+import me.rochblondiaux.minecraft.graphics.texture.Texture;
+import me.rochblondiaux.minecraft.graphics.texture.TextureAtlas;
 import me.rochblondiaux.minecraft.scene.Scene;
 import me.rochblondiaux.minecraft.shader.ShaderModuleData;
 import me.rochblondiaux.minecraft.shader.ShaderProgram;
@@ -30,8 +30,7 @@ public class SceneRenderer implements Cleanable {
         this.shaderProgram = new ShaderProgram(shaderModuleData);
 
         this.uniformMap = new UniformMap(shaderProgram.getId());
-        this.uniformMap.create("projectionMatrix");
-        this.uniformMap.create("modelMatrix");
+        this.createUniforms();
     }
 
     public void render(Scene scene) {
@@ -40,16 +39,27 @@ public class SceneRenderer implements Cleanable {
 
         // Set the uniforms
         this.uniformMap.set("projectionMatrix", scene.getProjection().getProjectionMatrix());
+        this.uniformMap.set("txtSampler", 0);
 
         // Render the scene
         Collection<Model> models = scene.getModels().values();
+        TextureAtlas textureAtlas = scene.getTextureAtlas();
         for (Model model : models) {
-            for (Mesh mesh : model.getMeshes()) {
-                GL30.glBindVertexArray(mesh.getVaoId());
-                List<Entity> entities = model.getEntities();
-                for (Entity entity : entities) {
-                    this.uniformMap.set("modelMatrix", entity.getModelMatrix());
-                    GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.getVerticesCount(), GL30.GL_UNSIGNED_INT, 0);
+            List<Entity> entities = model.getEntities();
+
+            // Materials
+            for (Material material : model.getMaterials()) {
+                Texture texture = textureAtlas.getTexture(material.getTexturePath());
+                GL13C.glActiveTexture(GL13C.GL_TEXTURE0);
+                texture.bind();
+
+                // Mesh
+                for (Mesh mesh : material.getMeshes()) {
+                    GL30.glBindVertexArray(mesh.getVaoId());
+                    for (Entity entity : entities) {
+                        this.uniformMap.set("modelMatrix", entity.getModelMatrix());
+                        GL30.glDrawElements(GL30.GL_TRIANGLES, mesh.getVerticesCount(), GL30.GL_UNSIGNED_INT, 0);
+                    }
                 }
             }
         }
@@ -63,7 +73,9 @@ public class SceneRenderer implements Cleanable {
     }
 
     public void createUniforms() {
-
+        this.uniformMap.create("projectionMatrix");
+        this.uniformMap.create("modelMatrix");
+        this.uniformMap.create("txtSampler");
     }
 
     @Override
