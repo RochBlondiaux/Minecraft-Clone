@@ -1,4 +1,4 @@
-package me.rochblondiaux.minecraft.graphics;
+package me.rochblondiaux.minecraft.scene.model;
 
 
 import java.util.ArrayList;

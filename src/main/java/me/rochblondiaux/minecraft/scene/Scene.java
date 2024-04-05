@@ -5,9 +5,9 @@ import java.util.Map;
 
 import lombok.Data;
 import me.rochblondiaux.minecraft.game.model.Cleanable;
-import me.rochblondiaux.minecraft.graphics.Entity;
-import me.rochblondiaux.minecraft.graphics.Mesh;
-import me.rochblondiaux.minecraft.graphics.Model;
+import me.rochblondiaux.minecraft.scene.model.Entity;
+import me.rochblondiaux.minecraft.scene.model.Mesh;
+import me.rochblondiaux.minecraft.scene.model.Model;
 import me.rochblondiaux.minecraft.graphics.texture.TextureAtlas;
 
 @Data

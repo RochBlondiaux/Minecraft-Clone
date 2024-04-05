@@ -14,6 +14,10 @@ import me.rochblondiaux.minecraft.graphics.*;
 import me.rochblondiaux.minecraft.graphics.texture.Texture;
 import me.rochblondiaux.minecraft.graphics.texture.TextureAtlas;
 import me.rochblondiaux.minecraft.scene.Scene;
+import me.rochblondiaux.minecraft.scene.model.Entity;
+import me.rochblondiaux.minecraft.scene.model.Material;
+import me.rochblondiaux.minecraft.scene.model.Mesh;
+import me.rochblondiaux.minecraft.scene.model.Model;
 import me.rochblondiaux.minecraft.shader.ShaderModuleData;
 import me.rochblondiaux.minecraft.shader.ShaderProgram;
 
@@ -50,6 +54,8 @@ public class SceneRenderer implements Cleanable {
 
             // Materials
             for (Material material : model.getMaterials()) {
+                this.uniformMap.set("material.diffuse", material.getDiffuseColor());
+
                 Texture texture = textureAtlas.getTexture(material.getTexturePath());
                 GL13C.glActiveTexture(GL13C.GL_TEXTURE0);
                 texture.bind();
@@ -78,6 +84,7 @@ public class SceneRenderer implements Cleanable {
         this.uniformMap.create("viewMatrix");
         this.uniformMap.create("modelMatrix");
         this.uniformMap.create("txtSampler");
+        this.uniformMap.create("material.diffuse");
     }
 
     @Override

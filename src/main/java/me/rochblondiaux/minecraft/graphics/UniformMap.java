@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
 
@@ -33,6 +34,10 @@ public class UniformMap {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             GL20.glUniformMatrix4fv(getUniformLocation(name), false, value.get(stack.mallocFloat(16)));
         }
+    }
+
+    public void set(String name, Vector4f value) {
+        GL20.glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
     }
 
     public void set(String name, int value) {

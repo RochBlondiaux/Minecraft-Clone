@@ -1,4 +1,4 @@
-package me.rochblondiaux.minecraft.graphics;
+package me.rochblondiaux.minecraft.scene.model;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
