@@ -3,7 +3,7 @@ package me.rochblondiaux.minecraft.graphics.renderer;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-import me.rochblondiaux.minecraft.game.Scene;
+import me.rochblondiaux.minecraft.scene.Scene;
 import me.rochblondiaux.minecraft.game.Window;
 import me.rochblondiaux.minecraft.game.model.Cleanable;
 

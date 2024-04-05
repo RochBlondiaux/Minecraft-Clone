@@ -3,7 +3,7 @@ package me.rochblondiaux.minecraft;
 import lombok.Data;
 import me.rochblondiaux.minecraft.game.Engine;
 import me.rochblondiaux.minecraft.graphics.renderer.Renderer;
-import me.rochblondiaux.minecraft.game.Scene;
+import me.rochblondiaux.minecraft.scene.Scene;
 import me.rochblondiaux.minecraft.game.Window;
 import me.rochblondiaux.minecraft.game.model.GameLogic;
 import me.rochblondiaux.minecraft.graphics.Mesh;
@@ -29,13 +29,23 @@ public class Minecraft implements GameLogic {
 
     @Override
     public void init(Window window, Scene scene, Renderer renderer) {
-        float[] positions = new float[] {
-                0.0f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f
+        float[] positions = new float[]{
+                -0.5f, 0.5f, -1.0f,
+                -0.5f, -0.5f, -1.0f,
+                0.5f, -0.5f, -1.0f,
+                0.5f, 0.5f, -1.0f,
         };
-        Mesh mesh = new Mesh(positions, 3);
-        scene.addMesh("triangle", mesh);
+        float[] colors = new float[]{
+                0.5f, 0.0f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.5f, 0.5f,
+                0.0f, 0.5f, 0.5f,
+        };
+        int[] indices = new int[]{
+                0, 1, 3, 3, 1, 2,
+        };
+        Mesh mesh = new Mesh(positions, colors, indices);
+        scene.addMesh("quad", mesh);
     }
 
     @Override

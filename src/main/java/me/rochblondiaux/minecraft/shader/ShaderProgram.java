@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL20;
 
+import lombok.Getter;
 import me.rochblondiaux.minecraft.game.model.Bindable;
 import me.rochblondiaux.minecraft.game.model.Cleanable;
 import me.rochblondiaux.minecraft.utils.ResourceUtils;
 
+@Getter
 public class ShaderProgram implements Bindable, Cleanable {
 
     private final int id;

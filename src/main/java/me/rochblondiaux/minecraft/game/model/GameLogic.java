@@ -1,7 +1,7 @@
 package me.rochblondiaux.minecraft.game.model;
 
 import me.rochblondiaux.minecraft.graphics.renderer.Renderer;
-import me.rochblondiaux.minecraft.game.Scene;
+import me.rochblondiaux.minecraft.scene.Scene;
 import me.rochblondiaux.minecraft.game.Window;
 
 public interface GameLogic extends Cleanable {

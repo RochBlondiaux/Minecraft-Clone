@@ -1,4 +1,4 @@
-package me.rochblondiaux.minecraft.game;
+package me.rochblondiaux.minecraft.scene;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +11,15 @@ import me.rochblondiaux.minecraft.graphics.Mesh;
 public class Scene implements Cleanable {
 
     private final Map<String, Mesh> meshes = new HashMap<>();
+    private final Projection projection;
+
+    public Scene(int width, int height) {
+        this.projection = new Projection(width, height);
+    }
+
+    public void resize(int width, int height) {
+        this.projection.update(width, height);
+    }
 
     public void addMesh(String name, Mesh mesh) {
         meshes.put(name, mesh);

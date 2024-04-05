@@ -3,6 +3,7 @@ package me.rochblondiaux.minecraft.game;
 import me.rochblondiaux.minecraft.game.model.Cleanable;
 import me.rochblondiaux.minecraft.game.model.GameLogic;
 import me.rochblondiaux.minecraft.graphics.renderer.Renderer;
+import me.rochblondiaux.minecraft.scene.Scene;
 
 public class Engine implements Cleanable {
 
@@ -19,7 +20,7 @@ public class Engine implements Cleanable {
         this.window = new Window(options, resizeCallback());
         this.gameLogic = logic;
         this.renderer = new Renderer();
-        this.scene = new Scene();
+        this.scene = new Scene(window.getWidth(), window.getWidth());
         this.targetFps = options.getFps();
         this.targetUps = options.getUps();
 
@@ -77,7 +78,7 @@ public class Engine implements Cleanable {
 
     private Runnable resizeCallback() {
         return () -> {
-
+            this.scene.resize(window.getWidth(), window.getHeight());
         };
     }
 
